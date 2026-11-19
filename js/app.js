@@ -7,8 +7,8 @@
   var byId = {};
   P.forEach(function (p) { byId[p.id] = p; });
 
-  var STORE_KEY = 'rd-bag-v1';
-  var state = { cat: 'All', sel: P[0].id, col: {}, size: null, needSize: false, pay: 'card', bag: loadBag() };
+  var STORE_KEY = 'rd-bag-v2';
+  var state = { cat: 'All', sel: P[0].id, col: {}, photo: 0, size: null, needSize: false, pay: 'card', bag: loadBag() };
 
   var $ = function (id) { return document.getElementById(id); };
   var fmt = function (n) { return '₦' + Number(n).toLocaleString('en-NG'); };
@@ -33,9 +33,17 @@
   function saveBag() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state.bag)); } catch (e) { /* storage unavailable */ } }
 
   var SHOE = 'M14 74 C12 60 26 52 52 50 C74 48 92 40 108 34 C122 29 134 31 146 40 C160 50 186 54 210 60 C224 64 230 70 228 76 C227 80 222 82 214 82 L28 82 C18 82 14 79 14 74 Z';
-  function media(p, ci, alt) {
+  function photosOf(p, i) {
+    var ph = p.colours[i][2];
+    return Array.isArray(ph) ? ph : (ph ? [ph] : []);
+  }
+  function media(p, ci, n, eager) {
     var c = p.colours[ci];
-    if (c[2]) return '<img src="' + esc(c[2]) + '" alt="' + esc(alt || (p.name + ' in ' + c[0])) + '" loading="lazy">';
+    var ph = photosOf(p, ci);
+    if (ph.length) {
+      var k = Math.min(n || 0, ph.length - 1);
+      return '<img src="' + esc(ph[k]) + '" alt="' + esc(p.name + ' in ' + c[0].toLowerCase() + (ph.length > 1 ? ', photo ' + (k + 1) + ' of ' + ph.length : '')) + '" width="800" height="1000"' + (eager ? '' : ' loading="lazy"') + ' decoding="async">';
+    }
     return '<svg viewBox="0 0 240 100" aria-hidden="true"><path d="' + SHOE + '" fill="' + esc(c[1]) + '" stroke="#111" stroke-opacity=".35" stroke-width="1"/><path d="M28 82 L28 89 L64 89 L64 82 Z" fill="#2A2A2A"/></svg>';
   }
   var ci = function (id) { return state.col[id] || 0; };
@@ -64,8 +72,8 @@
       return '<article class="card">' +
         '<button type="button" class="card-media' + (state.sel === p.id ? ' is-selected' : '') + '" data-open="' + p.id + '" aria-label="View ' + esc(p.name) + '">' + media(p, ci(p.id)) + '</button>' +
         '<div class="card-top"><h3>' + esc(p.name) + '</h3><span class="price">' + fmt(p.price) + '</span></div>' +
-        '<span class="card-sub">' + esc(c[0]) + ' · ' + p.colours.length + ' colours</span>' +
-        '<div class="swatches" role="radiogroup" aria-label="' + esc(p.name) + ' colours">' + swatches(p) + '</div>' +
+        '<span class="card-sub">' + esc(c[0]) + ' · ' + p.colours.length + (p.colours.length === 1 ? ' colour' : ' colours') + '</span>' +
+        (p.colours.length > 1 ? '<div class="swatches" role="radiogroup" aria-label="' + esc(p.name) + ' colours">' + swatches(p) + '</div>' : '') +
         '<button type="button" class="btn btn-line" data-open="' + p.id + '">Choose size</button>' +
         '</article>';
     }).join('');
@@ -82,8 +90,12 @@
       return '<button type="button" role="radio" class="size" aria-checked="' + (z === state.size) + '" data-size="' + z + '">' + z + '</button>';
     }).join('');
     var label = state.size ? (inBag ? 'Added (' + inBag + ') · Add another — ' : 'Add to bag — ') + fmt(p.price) : 'Select a size';
+    var ph = photosOf(p, ci(p.id));
+    var thumbs = ph.length > 1 ? '<div class="thumbs" role="group" aria-label="More photos">' + ph.map(function (src, n) {
+      return '<button type="button" class="thumb" data-photo="' + n + '" aria-pressed="' + (n === state.photo) + '" aria-label="Photo ' + (n + 1) + ' of ' + ph.length + '"><img src="' + esc(src) + '" alt="" loading="lazy" width="800" height="1000"></button>';
+    }).join('') + '</div>' : '';
     $('detail').innerHTML =
-      '<div class="detail-media">' + media(p, ci(p.id)) + '<span class="tag">' + esc(p.cat) + '</span></div>' +
+      '<div class="detail-media">' + media(p, ci(p.id), state.photo, true) + '<span class="tag">' + esc(p.cat) + '</span></div>' + thumbs +
       '<div class="detail-head"><h3>' + esc(p.name) + '</h3><span class="price">' + fmt(p.price) + '</span></div>' +
       '<p class="muted small">' + esc(p.note) + '</p>' +
       '<div><span class="opt-label">Material &amp; colour — <span>' + esc(c[0]) + '</span></span>' +
@@ -170,13 +182,16 @@
     if (d.cat) { state.cat = d.cat; renderCats(); renderGrid(); }
     else if (d.col) {
       var parts = d.col.split(':'); state.col[parts[0]] = Number(parts[1]);
+      if (parts[0] === state.sel) state.photo = 0;
       renderGrid(); renderDetail();
     }
     else if (d.open) {
+      if (state.sel !== d.open) state.photo = 0;
       state.sel = d.open; state.needSize = false; renderGrid(); renderDetail();
       if (window.matchMedia('(max-width: 960px)').matches) $('detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
       else $('detail').focus({ preventScroll: true });
     }
+    else if (d.photo) { state.photo = Number(d.photo); renderDetail(); }
     else if (d.size) { state.size = d.size; state.needSize = false; renderDetail(); renderChart(); }
     else if (d.add) {
       if (!state.size) { state.needSize = true; renderDetail(); return; }

@@ -1,39 +1,59 @@
 /*
  * Royal Designs — product catalogue.
  *
- * SAMPLE DATA: names, prices and colour lists are placeholders until the
- * real ones come from Royal Designs.
+ * Photos are real Royal Designs work. PRODUCT NAMES AND PRICES ARE STILL
+ * PLACEHOLDERS — replace them with the real ones from Royal Designs.
  *
  * Each product:
  *   id       short unique id (letters/numbers, no spaces)
  *   name     product name
- *   cat      one of: Loafers, Oxfords, Boots, Mules, Sandals
+ *   cat      one of the categories in RD_CATEGORIES below
  *   price    price in Naira (whole number, no commas)
  *   note     one short line about the shoe
- *   colours  list of [colour name, swatch hex, optional photo path]
- *            e.g. ['Black calf', '#151515', '/assets/products/sovereign-black.jpg']
- *            When a photo path is set it replaces the drawn shoe outline.
+ *   colours  list of [colour/material name, swatch hex, [photo paths]]
+ *            The first photo is the main one; extra photos show as a gallery.
+ *            Leave the photo list empty ([]) for a colour with no photo yet.
+ *
+ * Photos: put them in /assets/products/ as 800×1000 (4:5) .webp or .jpg.
  */
 window.RD_PRODUCTS = [
-  { id: 'p1', name: 'The Sovereign Loafer', cat: 'Loafers', price: 85000, note: 'Penny loafer on a hand-stitched sole.',
-    colours: [['Black calf', '#151515'], ['Dark brown calf', '#4A2E1E'], ['Cognac calf', '#9C5A2B'], ['Burgundy calf', '#5E1A22']] },
-  { id: 'p2', name: 'Crown Oxford', cat: 'Oxfords', price: 95000, note: 'Cap-toe oxford, hand-burnished.',
-    colours: [['Black calf', '#151515'], ['Oxblood calf', '#4F1515'], ['Tan calf', '#B07A47']] },
-  { id: 'p3', name: 'Monarch Chelsea Boot', cat: 'Boots', price: 120000, note: 'Elastic-sided boot with a pull tab.',
-    colours: [['Black suede', '#1E1E1E'], ['Brown suede', '#5B3A26'], ['Taupe suede', '#8E7F70'], ['Black calf', '#151515']] },
-  { id: 'p4', name: 'Palace Mule', cat: 'Mules', price: 65000, note: 'Backless mule in soft suede.',
-    colours: [['Black suede', '#1E1E1E'], ['Navy suede', '#1F2A44'], ['Olive suede', '#5A5A3A'], ['Wine suede', '#5A1E2C']] },
-  { id: 'p5', name: 'Duke Monk Strap', cat: 'Oxfords', price: 98000, note: 'Double monk strap with brass buckles.',
-    colours: [['Black calf', '#151515'], ['Dark brown calf', '#4A2E1E']] },
-  { id: 'p6', name: 'Heir Tassel Loafer', cat: 'Loafers', price: 88000, note: 'Unlined tassel loafer, soft and light.',
-    colours: [['Cognac calf', '#9C5A2B'], ['Black calf', '#151515'], ['Burgundy calf', '#5E1A22']] },
-  { id: 'p7', name: 'Regal Palm Slipper', cat: 'Sandals', price: 35000, note: 'Hand-cut leather slide.',
-    colours: [['Black', '#151515'], ['Brown', '#5B3A26'], ['White', '#F2F0EC'], ['Tan', '#B07A47']] },
-  { id: 'p8', name: 'Throne Sandal', cat: 'Sandals', price: 45000, note: 'Cross-strap sandal on a leather sole.',
-    colours: [['Black', '#151515'], ['Brown', '#5B3A26'], ['Tan', '#B07A47']] }
+  { id: 'penny', name: 'The Sovereign Penny Loafer', cat: 'Loafers', price: 85000,
+    note: 'Classic penny loafer in smooth black calf, lined in leather.',
+    colours: [['Black leather', '#151515', ['/assets/products/penny-loafer-black.webp']]] },
+
+  { id: 'suede-loafer', name: 'Monarch Suede Loafer', cat: 'Loafers', price: 80000,
+    note: 'Soft unstructured suede loafer on a light cream sole.',
+    colours: [['Black suede', '#1A1C22', ['/assets/products/suede-loafer-black-1.webp', '/assets/products/suede-loafer-black-2.webp']]] },
+
+  { id: 'woven-monk', name: 'Duke Woven Monk Loafer', cat: 'Loafers', price: 98000,
+    note: 'Hand-woven black leather with a double monk strap.',
+    colours: [['Black woven leather', '#151515', ['/assets/products/woven-monk-black.webp']]] },
+
+  { id: 'derby', name: 'Crown Derby', cat: 'Lace-ups', price: 95000,
+    note: 'Plain-toe derby in polished brown leather.',
+    colours: [['Brown leather', '#4A2E1E', ['/assets/products/derby-brown.webp']]] },
+
+  { id: 'chelsea', name: 'Monarch Chelsea Boot', cat: 'Boots', price: 120000,
+    note: 'Chelsea boot with a raised Cuban heel and elastic sides.',
+    colours: [
+      ['Black suede', '#1A1C22', ['/assets/products/chelsea-suede-black-1.webp', '/assets/products/chelsea-suede-black-2.webp', '/assets/products/chelsea-suede-black-3.webp']],
+      ['Black leather', '#0E0E0E', ['/assets/products/chelsea-leather-black.webp']]
+    ] },
+
+  { id: 'buckle-slipper', name: 'Regal Buckle Slipper', cat: 'Slippers', price: 45000,
+    note: 'Toe-post slipper in black leather with a side buckle strap.',
+    colours: [['Black leather', '#151515', ['/assets/products/buckle-slipper-black-1.webp', '/assets/products/buckle-slipper-black-2.webp']]] },
+
+  { id: 'cross-slipper', name: 'Palace Cross Slipper', cat: 'Slippers', price: 40000,
+    note: 'Crossover straps in textured black leather on a square sole.',
+    colours: [['Black textured leather', '#151515', ['/assets/products/cross-slipper-black.webp']]] },
+
+  { id: 'sandal', name: 'Throne Sandal', cat: 'Sandals', price: 55000,
+    note: 'Closed-toe leather sandal with heel strap and metal ornament.',
+    colours: [['Black leather', '#151515', ['/assets/products/sandal-black.webp']]] }
 ];
 
-window.RD_CATEGORIES = ['All', 'Loafers', 'Oxfords', 'Boots', 'Mules', 'Sandals'];
+window.RD_CATEGORIES = ['All', 'Loafers', 'Lace-ups', 'Boots', 'Slippers', 'Sandals'];
 window.RD_SIZES = ['39', '40', '41', '42', '43', '44', '45', '46', '47'];
 
 /* EU, UK, US (men), foot length cm — approximate; confirm against the workshop's lasts. */

@@ -18,19 +18,19 @@ Plain HTML, CSS and JavaScript, so there's no build step. It's hosted on Netlify
 
 ## Editing products
 
-Open `js/products.js`. Each shoe has a list of colours:
+Open `js/products.js`. Each shoe lists its materials/colours, and each colour has its own photos:
 
 ```js
-colours: [['Black calf', '#151515'], ['Cognac calf', '#9C5A2B']]
+colours: [
+  ['Black suede',   '#1A1C22', ['/assets/products/chelsea-suede-black-1.webp', '/assets/products/chelsea-suede-black-2.webp']],
+  ['Black leather', '#0E0E0E', ['/assets/products/chelsea-leather-black.webp']]
+]
 ```
 
-To use a real photo for a colour, put the image in `assets/products/` and add its path as a third item:
+The first photo is the main one. Extra photos show as a gallery on the product panel.
+Photos go in `assets/products/` as 800×1000 (4:5) WebP files, about 50–100 KB each.
 
-```js
-['Black calf', '#151515', '/assets/products/sovereign-black.jpg']
-```
-
-Use 4:5 portrait photos on a plain light background, around 1200×1500 px, saved as JPG or WebP under 300 KB.
+Product names and prices are still placeholders. Replace them with the real ones.
 
 ## How orders work right now
 
