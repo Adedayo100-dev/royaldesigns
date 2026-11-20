@@ -209,6 +209,7 @@ tbody th { font-weight: 600; }
 .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 36px; padding-top: 64px; padding-bottom: 32px; }
 .footer-grid img { width: 150px; }
 .col { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.ig { display: inline-flex; align-items: center; gap: 8px; }
 .label { font-size: 12px; letter-spacing: .2em; color: var(--muted); }
 .footer-bottom { border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--muted); padding-top: 22px; padding-bottom: 32px; }
 .footer-bottom a { text-decoration: underline; }
